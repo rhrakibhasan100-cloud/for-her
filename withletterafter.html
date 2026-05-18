@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 3rd Anniversary!</title>
+    <style>
+        /* --- CSS STYLING --- */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&family=Sacramento&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            overflow-y: auto; 
+        }
+
+        /* The Main Card */
+        .card {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            margin: 20px 0;
+            transition: height 0.3s ease; /* Smooth card height change */
+        }
+
+        /* --- IMAGE CONTAINER --- */
+        .img-container {
+            width: 100%;
+            height: 400px; 
+            transition: height 0.8s ease-in-out; 
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+        }
+
+        .img-container img {
+            width: 100%; 
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            max-width: 100%;
+        }
+
+        .img-container img.active { opacity: 1; }
+
+        /* --- TEXT STYLING --- */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            color: #d6336c;
+        }
+
+        #wishes {
+            font-size: 1.1rem;
+            min-height: 80px;
+            line-height: 1.6;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        /* --- LETTER BUTTON --- */
+        .letter-btn {
+            background: #fff;
+            color: #d6336c;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+            
+            /* HIDDEN INITIALLY */
+            display: none; 
+            
+            /* Animation for appearance */
+            animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+
+        /* Animation Keyframes for the button popping in */
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .letter-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            background: #ffeef2;
+        }
+
+        /* --- LETTER OVERLAY --- */
+        .letter-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .letter-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .letter-paper {
+            background: #fffdf5;
+            color: #4a4a4a;
+            width: 90%;
+            max-width: 600px;
+            height: 80vh;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: relative;
+            transform: translateY(50px);
+            transition: transform 0.4s ease;
+            overflow-y: auto;
+            font-family: 'Sacramento', cursive;
+            font-size: 1.5rem;
+            line-height: 1.8;
+            background-image: linear-gradient(#f0f0f0 1px, transparent 1px);
+            background-size: 100% 2.5rem;
+        }
+
+        .letter-overlay.open .letter-paper {
+            transform: translateY(0);
+        }
+
+        .close-letter {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #d6336c;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* --- START SCREEN & HEARTS --- */
+        .heart-bg {
+            position: fixed;
+            top: -10vh;
+            color: rgba(255, 255, 255, 0.5);
+            animation: fall linear forwards;
+            z-index: 1;
+            pointer-events: none;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        #start-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ff9a9e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+            cursor: pointer;
+            transition: opacity 0.5s;
+        }
+
+        .start-btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: white;
+            color: #d6336c;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-family: 'Dancing Script', cursive;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Start Screen -->
+    <div id="start-overlay" onclick="startCelebration()">
+        <button class="start-btn">Click for a Surprise ❤️</button>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card">
+        <h1>Happy Anniversary!</h1>
+        
+        <div class="img-container" id="image-slider">
+            <!-- Images injected by JS -->
+        </div>
+
+        <p id="wishes"></p>
+        
+        <!-- Button is Hidden via CSS (display: none) initially -->
+        <button class="letter-btn" id="letterBtn" onclick="openLetter()">Read My Letter 💌</button>
+    </div>
+
+    <!-- Letter Overlay -->
+    <div class="letter-overlay" id="letter-overlay">
+        <div class="letter-paper">
+            <span class="close-letter" onclick="closeLetter()">&times;</span>
+            
+            <!-- WRITE YOUR LETTER HERE -->
+            <p>Dearest Elma,</p>
+            <p>Three years ago, we started as two strangers and somehow became each other’s favorite place to stay. And now, looking back at everything we have shared, it feels impossible to imagine my life without you at this point. Somehow, in the most beautiful way, you become the best, beautiful, precious, important, special part of my life.You are not just the person I love, you are my comfort zone. I can simply be me, and somehow you love every version of me, even the imperfect ones. You are my comfort, my happiness, my peace, and the most beautiful chapter of my life.No matter how much time passes, I will never stop choosing you. In every lifetime, in every version of this world, I believe my heart would still find its way back to yours.</p>
+            <p style="text-align: right; margin-top: 30px;">Yours,<br>Rakib</p>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION --- //
+        const photos = [
+            "images/photo1.jpg", 
+            "images/photo2.jpg", 
+            "images/photo3.jpg",
+            "images/photo4.jpg",
+            "images/photo5.jpg",
+            "images/photo6.jpg",
+            "images/photo7.jpg",
+            "images/photo8.jpg",
+            "images/photo9.jpg",
+            "images/photo10.jpg",
+            "images/photo11.jpg"
+        ];
+
+        const messages = [
+            "Happy Anniversary, my universe.",
+            "Its been 3 years.",
+            "I still fall for you a little more every single day.",
+            "You are the most beautiful and the most important and the special girl to me.",
+            "These three years with you have been the most precious part of my life.",
+            "With you, even ordinary moments feel special and unforgettable.",
+            "Every moment we shared has become my favourite memory.",
+            "You have filled my life with love, peace, and endless happiness and yeah also a little bit fights.",
+            "No matter where life takes us, I always want you by my side.",
+            "I am truly lucky to have someone as caring and wonderful as you.",
+            "I love you more than words can ever express."
+        ];
+
+        // --- VARIABLES --- //
+        let currentIndex = 0;
+        const imgContainer = document.getElementById('image-slider');
+        const textElement = document.getElementById('wishes');
+        const overlay = document.getElementById('start-overlay');
+        const letterOverlay = document.getElementById('letter-overlay');
+        const letterBtn = document.getElementById('letterBtn');
+
+        // --- IMAGE LOGIC --- //
+        function initImages() {
+            photos.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = "Memory";
+                img.onload = function() {
+                    if(index === 0) adjustFrameSize(img);
+                };
+                if (index === 0) img.classList.add('active');
+                imgContainer.appendChild(img);
+            });
+        }
+
+        function adjustFrameSize(imgElement) {
+            const height = imgElement.clientHeight;
+            imgContainer.style.height = height + 'px';
+        }
+
+        // --- TYPING EFFECT --- //
+        function typeWriter(text, i, fnCallback) {
+            if (i < text.length) {
+                textElement.innerHTML = text.substring(0, i+1) + '<span aria-hidden="true">|</span>';
+                setTimeout(function() {
+                    typeWriter(text, i + 1, fnCallback)
+                }, 50);
+            } else if (typeof fnCallback == 'function') {
+                // Wait a bit after finishing text before moving to next step
+                setTimeout(fnCallback, 2500);
+            }
+        }
+
+        // --- SLIDESHOW LOGIC (UPDATED) --- //
+        function startSlideshow() {
+            const images = document.querySelectorAll('#image-slider img');
+
+            // Logic to move to next slide
+            // We increment the index first to prepare for the NEXT slide
+            let nextIndex = currentIndex + 1;
+
+            if (nextIndex < photos.length) {
+                // --- IF THERE ARE MORE PHOTOS: CONTINUE SLIDESHOW ---
+                
+                // Hide current
+                images[currentIndex].classList.remove('active');
+                
+                // Update global index
+                currentIndex = nextIndex;
+                
+                // Show next
+                images[currentIndex].classList.add('active');
+                adjustFrameSize(images[currentIndex]);
+                
+                // Type text for this new slide
+                textElement.innerHTML = "";
+                typeWriter(messages[currentIndex], 0, function(){
+                    startSlideshow(); // Recursively call for next slide
+                });
+
+            } else {
+                // --- IF THIS WAS THE LAST PHOTO: STOP AND SHOW BUTTON ---
+                revealButton();
+            }
+        }
+
+        function revealButton() {
+            // This removes 'display: none' and adds the pop-in animation
+            letterBtn.style.display = "inline-block";
+        }
+
+        // --- LETTER FUNCTIONS --- //
+        function openLetter() {
+            letterOverlay.classList.add('open');
+        }
+
+        function closeLetter() {
+            letterOverlay.classList.remove('open');
+        }
+
+        // --- BACKGROUND & START --- //
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-bg');
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 3 + 2 + "s";
+            heart.style.fontSize = Math.random() * 20 + 10 + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+
+        function startCelebration() {
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            
+            initImages();
+            
+            // Start the first slide manually
+            typeWriter(messages[0], 0, function(){
+                startSlideshow();
+            });
+            
+            setInterval(createHeart, 300);
+        }
+    </script>
+</body>
+</html>
